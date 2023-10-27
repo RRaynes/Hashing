@@ -27,10 +27,14 @@ public class HashTable {
 	 * @param key
 	 * @param index
 	 * @return 			either returns an available position or the first index probed
+	 * 						-1 is returned if there aren't other spots
+	 * 						index is either available or a match
 	 */
-	int probe(int key, int index) {
-		boolean found = false; //if true this means we have found the key
-					
+	int probe(int key, int firstIndex) {
+		int i = 0;
+		while (occuped[i] == true) {
+			
+		}
 		
 		return 1;
 	}
