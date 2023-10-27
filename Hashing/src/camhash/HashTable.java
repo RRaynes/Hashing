@@ -6,13 +6,15 @@ import java.util.Arrays;
 
 public class HashTable {
 	int content[];
-	boolean occupied[]; //
+	boolean occupied[];
 	boolean available[];
+	int TS; //size of table
 	
 	public HashTable(int size) {
 		content = new int[size];
 		occupied = new boolean[size];
 		available = new boolean[size];
+		TS = size;
 		Arrays.fill(available, true);
 	}
 	
@@ -23,29 +25,38 @@ public class HashTable {
 	
 	
 	/**
-	 * 
-	 * @param key
-	 * @param index
+	 * @param key		value to check for
+	 * @param index		index to start probing at
 	 * @return 			either returns an available position or the first index probed
 	 * 						-1 is returned if there aren't other spots
 	 * 						index is either available or a match
 	 */
-	int probe(int key, int firstIndex) {
-		int i = 0;
-		while (occuped[i] == true) {
-			
+	int probe(int key, int index) {
+		int firstIndex = index; //tracks first index
+		boolean visitFirst = false; //tracks if we have visited the firstIndex yet
+		while (occupied[index]) {
+			System.out.println(index);
+			if (available[index]) { //if the index is available, return it
+				return index;
+			}
+			if (visitFirst && index == firstIndex) {
+				System.out.println();
+				//in this scenario we are revisiting the first index, and should return -1
+				//as we have not found a match or available position
+				return -1;
+			}
+			//we check here if the key is at the probed index
+			if (content[index] == key) {
+				return index;
+			}
+			index = ((index%TS)+1)%TS; //add too the table size
+			visitFirst = true;
 		}
-		
-		return 1;
+		return index;
 	}
 	
 	int probe(int key) {
-		return probe(key,0);
-	}
-	
-	int hash(int key,int i) {
-		return (key%content.length + i)%content.length; //this seems the same as '(key+1)%content.length'? 
-														//I just used the function outlined in the assignment
+		return probe(key,key%content.length);
 	}
 	
 	/**
@@ -54,10 +65,41 @@ public class HashTable {
 	 * @return
 	 */
 	int insert(int key) {
-		int index = probe(key,0);
+		int index = probe(key);
+		//if ()
+		
+		
+		
+		if (index == -1) {
+			return index;
+		}
 		
 		return -1;
 	}
 	
-	
+	void print() {
+		System.out.print("Index:\t\t");
+		for (int i = 0; i < content.length; i++) {
+			System.out.print(i + "\t");
+		}
+		System.out.print("\nContent:\t");
+		for (int i : content) {
+			System.out.print(i + "\t");
+		}
+		System.out.print("\nOccupied:\t");
+		for (boolean b : occupied) {
+			if (b)
+				System.out.print("T" + "\t");
+			else
+				System.out.print("F" + "\t");
+		}
+		System.out.print("\nAvailable:\t");
+		for (boolean b : available) {
+			if (b)
+				System.out.print("T" + "\t");
+			else
+				System.out.print("F" + "\t");
+		}
+		System.out.println("\n");
+	}
 }
