@@ -20,9 +20,7 @@ public class HashTable {
 	
 	public HashTable() {
 		this(20);
-	}
-	
-	
+	}	
 	
 	/**
 	 * @param key		value to check for
@@ -34,13 +32,15 @@ public class HashTable {
 	int probe(int key, int index) {
 		int firstIndex = index; //tracks first index
 		boolean visitFirst = false; //tracks if we have visited the firstIndex yet
-		while (occupied[index]) {
-			System.out.println(index);
+		System.out.println("PROBING INDEX: " + index);
+		while (occupied[index]) {			
+			//System.out.println(index);
 			if (available[index]) { //if the index is available, return it
 				return index;
 			}
+			//System.out.println(index + " == " + firstIndex);
 			if (visitFirst && index == firstIndex) {
-				System.out.println();
+				//System.out.println("QQQ");
 				//in this scenario we are revisiting the first index, and should return -1
 				//as we have not found a match or available position
 				return -1;
@@ -49,7 +49,7 @@ public class HashTable {
 			if (content[index] == key) {
 				return index;
 			}
-			index = ((index%TS)+1)%TS; //add too the table size
+			index = ((index%TS)+1)%TS; //go further along the table
 			visitFirst = true;
 		}
 		return index;
@@ -60,20 +60,52 @@ public class HashTable {
 	}
 	
 	/**
-	 * search function for 'key'
+	 * search function for 'key' using lienar probing
 	 * @param key
-	 * @return
+	 * @return	index key is at or -1 if its not in the table
+	 */
+	int search(int key) {
+		System.out.println("searching for " + key);
+		int index = probe(key);
+		if (index == -1 || content[index] != key)
+			return -1;
+		return index;
+	}
+	
+	/**
+	 * insert function using linear probing
+	 * @param key	key to be inserted
+	 * @return		-1 if there is not a spot to insert in
+	 * 				otherwise returns the spot 'key' was inserted to
 	 */
 	int insert(int key) {
 		int index = probe(key);
-		//if ()
-		
-		
-		
-		if (index == -1) {
+		System.out.println("index used for insert method: " + index + ", inserting " + key);
+		if (index == -1 || content[index] == key) {
+			//key is already in hash table, return -1
+				//or probe was unsuccessful, therefore insert is too
+			System.out.println("returning early insert");
+			return -1;
+		} if (available[index]) {
+			//given this index is available, we can now insert here
+			content[index] = key;
+			occupied[index] = true;
+			available[index] = false;
+		}		
+		return index;
+	}
+	
+	/**
+	 * Lazy deletion using linear probing
+	 * @param key	the key to delete
+	 * @return		-1 if there is not
+	 */
+	int delete(int key) {
+		int index = probe(key);
+		if (index != -1 && content[index] == key) {
+			available[index] = true;
 			return index;
 		}
-		
 		return -1;
 	}
 	

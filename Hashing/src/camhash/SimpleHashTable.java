@@ -19,13 +19,13 @@ public class SimpleHashTable {
 	}
 
 	// inserts if the position is available, returns false if it is already occupied
-	boolean insert(int key) {
+	int insert(int key) {
 		int index = hash(key);
 		if (occupied[index] == true)
-			return false;
+			return -1;
 		content[index] = key;
 		occupied[index] = true;
-		return true;
+		return index;
 	}
 
 	// searches for 'key' returns index, if not there, returns -1
